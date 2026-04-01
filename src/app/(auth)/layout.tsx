@@ -1,6 +1,36 @@
 // import Link from "next/link";
 // import { UtensilsCrossed } from "lucide-react";
 
+// const testimonials = [
+//   {
+//     text: "Found my favourite biryani spot in 30 seconds. The AI recommendations are scary accurate!",
+//     name: "Tasnim Rahman",
+//     role: "Food Blogger",
+//     avatar: "T",
+//     rating: 5,
+//   },
+//   {
+//     text: "Booked a table for 8 people in under a minute. Incredible experience.",
+//     name: "Arif Hossain",
+//     role: "Software Engineer",
+//     avatar: "A",
+//     rating: 5,
+//   },
+//   // {
+//   //   text: "The AI chatbot suggested a hidden gem I never would have found on my own.",
+//   //   name: "Nadia Islam",
+//   //   role: "Marketing Manager",
+//   //   avatar: "N",
+//   //   rating: 5,
+//   // },
+// ];
+
+// const stats = [
+//   { value: "1,200+", label: "Restaurants" },
+//   { value: "50K+",   label: "Happy users" },
+//   { value: "4.9★",   label: "Avg rating"  },
+// ];
+
 // export default function AuthLayout({
 //   children,
 // }: {
@@ -8,64 +38,161 @@
 // }) {
 //   return (
 //     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-//       {/* Left panel — branding */}
+
+//       {/* ── Left panel ── */}
 //       <div
-//         className="hidden lg:flex flex-col justify-between p-12"
+//         className="hidden lg:flex flex-col relative overflow-hidden"
 //         style={{ backgroundColor: "var(--color-primary)" }}
 //       >
-//         <Link href="/" className="flex items-center gap-2 font-bold text-xl text-white">
-//           <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-//             <UtensilsCrossed size={18} className="text-white" />
-//           </div>
-//           FoodieAI
-//         </Link>
-
-//         <div>
-//           <p className="text-5xl font-bold text-white leading-tight mb-4">
-//             Discover the best food in your city
-//           </p>
-//           <p className="text-white/70 text-lg">
-//             Join 50,000+ food lovers getting AI-powered restaurant recommendations every day.
-//           </p>
+//         {/* Background pattern */}
+//         <div className="absolute inset-0 opacity-10">
+//           <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-white/30 -translate-x-1/2 -translate-y-1/2" />
+//           <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-white/20 translate-x-1/3 translate-y-1/3" />
+//           <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full bg-white/10 -translate-x-1/2 -translate-y-1/2" />
 //         </div>
 
-//         <div className="flex flex-col gap-4">
-//           {[
-//             { name: "Tasnim R.", text: "Found my favourite biryani spot in 30 seconds!", avatar: "T" },
-//             { name: "Arif H.", text: "The AI chatbot is incredibly accurate.", avatar: "A" },
-//           ].map((t) => (
-//             <div key={t.name} className="flex items-start gap-3 bg-white/10 rounded-2xl p-4">
-//               <div className="w-9 h-9 rounded-full bg-white/30 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-//                 {t.avatar}
-//               </div>
-//               <div>
-//                 <p className="text-white text-sm">"{t.text}"</p>
-//                 <p className="text-white/60 text-xs mt-1">— {t.name}</p>
-//               </div>
+//         <div className="relative flex flex-col h-full p-10 xl:p-14">
+
+//           {/* Logo */}
+//           <Link href="/" className="flex items-center gap-2.5 w-fit">
+//             <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+//               <UtensilsCrossed size={18} className="text-white" />
 //             </div>
-//           ))}
+//             <span className="text-white font-bold text-xl tracking-tight">FoodieAI</span>
+//           </Link>
+
+//           {/* Main content */}
+//           <div className="flex-1 flex flex-col justify-center py-12">
+
+//             {/* Badge */}
+//             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 border border-white/20 w-fit mb-8">
+//               <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+//               <span className="text-white/90 text-xs font-medium">AI-Powered Discovery</span>
+//             </div>
+
+//             <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-5">
+//               Find your next<br />
+//               <span className="text-white/70">favourite meal</span>
+//             </h1>
+
+//             <p className="text-white/60 text-base leading-relaxed mb-10 max-w-sm">
+//               Discover top-rated restaurants, book tables instantly, and get AI-powered recommendations tailored just for you.
+//             </p>
+
+//             {/* Stats */}
+//             <div className="grid grid-cols-3 gap-4 mb-12">
+//               {stats.map((s) => (
+//                 <div
+//                   key={s.label}
+//                   className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 text-center"
+//                 >
+//                   <p className="text-white text-xl font-bold">{s.value}</p>
+//                   <p className="text-white/50 text-xs mt-1">{s.label}</p>
+//                 </div>
+//               ))}
+//             </div>
+
+//             {/* Testimonials */}
+//             <div className="space-y-3">
+//               {testimonials.map((t) => (
+//                 <div
+//                   key={t.name}
+//                   className="flex items-start gap-3 bg-white/8 backdrop-blur-sm border border-white/15 rounded-2xl p-4"
+//                 >
+//                   <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+//                     {t.avatar}
+//                   </div>
+//                   <div className="flex-1 min-w-0">
+//                     <div className="flex items-center gap-1 mb-1">
+//                       {Array.from({ length: t.rating }).map((_, i) => (
+//                         <svg key={i} width="10" height="10" viewBox="0 0 24 24" fill="#FCD34D">
+//                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+//                         </svg>
+//                       ))}
+//                     </div>
+//                     <p className="text-white/80 text-xs leading-relaxed">"{t.text}"</p>
+//                     <p className="text-white/40 text-xs mt-1.5">— {t.name}, {t.role}</p>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           </div>
+
+//           {/* Footer */}
+//           <p className="text-white/25 text-xs">
+//             © 2025 FoodieAI · All rights reserved
+//           </p>
 //         </div>
 //       </div>
 
-//       {/* Right panel — form */}
-//       <div className="flex items-center justify-center p-6 bg-[var(--color-warm)] dark:bg-stone-950">
-//         <div className="w-full max-w-md">
-//           {/* Mobile logo */}
-//           <Link
-//             href="/"
-//             className="flex lg:hidden items-center gap-2 font-bold text-lg mb-8"
-//           >
+//       {/* ── Right panel ── */}
+//       <div className="flex flex-col min-h-screen bg-[var(--color-warm)] dark:bg-stone-950">
+
+//         {/* Mobile header */}
+//         <div className="lg:hidden flex items-center justify-between px-6 pt-8 pb-4">
+//           <Link href="/" className="flex items-center gap-2">
 //             <div
 //               className="w-8 h-8 rounded-xl flex items-center justify-center"
 //               style={{ backgroundColor: "var(--color-primary)" }}
 //             >
-//               <UtensilsCrossed size={16} className="text-white" />
+//               <UtensilsCrossed size={14} className="text-white" />
 //             </div>
-//             <span className="text-stone-900 dark:text-white">
+//             <span className="font-bold text-stone-900 dark:text-white">
 //               Foodie<span style={{ color: "var(--color-primary)" }}>AI</span>
 //             </span>
 //           </Link>
-//           {children}
+//           <Link
+//             href="/"
+//             className="text-xs text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors"
+//           >
+//             ← Back to site
+//           </Link>
+//         </div>
+
+//         {/* Desktop back link */}
+//         <div className="hidden lg:flex justify-end px-10 pt-8">
+//           <Link
+//             href="/"
+//             className="text-xs text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors flex items-center gap-1"
+//           >
+//             ← Back to FoodieAI
+//           </Link>
+//         </div>
+
+//         {/* Form area */}
+//         <div className="flex-1 flex items-center justify-center px-6 py-8 lg:px-10">
+//           <div className="w-full max-w-[420px]">
+
+//             {/* Card wrapper */}
+//             <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm p-7">
+//               {children}
+//             </div>
+
+//             {/* Bottom note */}
+//             <p className="text-center text-xs text-stone-400 dark:text-stone-600 mt-5">
+//               By continuing, you agree to our{" "}
+//               <Link href="/terms" className="underline hover:text-stone-600 dark:hover:text-stone-400">
+//                 Terms
+//               </Link>{" "}
+//               &{" "}
+//               <Link href="/privacy" className="underline hover:text-stone-600 dark:hover:text-stone-400">
+//                 Privacy Policy
+//               </Link>
+//             </p>
+//           </div>
+//         </div>
+
+//         {/* Mobile stats */}
+//         <div className="lg:hidden grid grid-cols-3 gap-3 px-6 pb-8">
+//           {stats.map((s) => (
+//             <div
+//               key={s.label}
+//               className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-3 text-center"
+//             >
+//               <p className="text-sm font-bold text-stone-900 dark:text-white">{s.value}</p>
+//               <p className="text-xs text-stone-400 mt-0.5">{s.label}</p>
+//             </div>
+//           ))}
 //         </div>
 //       </div>
 //     </div>
@@ -184,7 +311,7 @@ export default function AuthLayout({
               </div>
               <div className="bg-white/60 dark:bg-stone-900/40 grid grid-cols-2 divide-x divide-amber-100 dark:divide-amber-900/50">
                 {[
-                  { role: "User", email: "user@example.com", pass: "User@123409" },
+                  { role: "User", email: "user00@example.com", pass: "User@123409" },
                   { role: "Admin", email: "farialrobama15@gmail.com", pass: "09876@fF" },
                 ].map((c) => (
                   <div key={c.role} className="px-4 py-3 space-y-0.5">

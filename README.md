@@ -24,7 +24,7 @@
 
 | Role  | Email               | Password    |
 |-------|---------------------|-------------|
-| User  | user@example.com    | User@123409  |
+| User  | user00@example.com    | User@123409  |
 | Admin | farialrobama15@gmail.com   | 09876@fF  |
 
 ---
