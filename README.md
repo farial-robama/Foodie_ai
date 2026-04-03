@@ -228,16 +228,16 @@ Visit [http://localhost:3000](http://localhost:3000)
 ![Landing](./public/food-ai-1.png)
 
 ### Explore Page
-Browse 1,200+ restaurants with advanced filters and AI-powered search.
+![Explore](./public/explore.png)
 
 ### Restaurant Detail
-Full restaurant profile with menu, booking form, reviews, and AI summary.
+![Restaurant Detail](./public/restaurant.png)
 
 ### Dashboard
-Role-based dashboard with analytics charts and data management.
+![Dashboard](./public/dashboard.png)
 
 ### AI Chatbot
-Floating chat widget powered by Mistral AI for personalized recommendations.
+![AI Chatbot](./public/AI-chatbot.png)
 
 ---
 
