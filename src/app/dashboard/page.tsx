@@ -30,6 +30,7 @@ export default function DashboardPage() {
   const [reviewCount, setReviewCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [roleChecked, setRoleChecked] = useState(false);
+  const [savedCount, setSavedCount] = useState(0);
 
   useEffect(() => {
     if (!userId || !user) return;
@@ -61,9 +62,12 @@ export default function DashboardPage() {
         }
 
         // Fetch bookings and reviews in parallel
-        const [bookingsRes, reviewsRes] = await Promise.all([
+        const [bookingsRes, reviewsRes, savedRes] = await Promise.all([
           fetch(`/api/bookings?clerkId=${userId}`),
-          mongoId ? fetch(`/api/reviews?userId=${mongoId}`) : Promise.resolve(null),
+          mongoId
+            ? fetch(`/api/reviews?userId=${mongoId}`)
+            : Promise.resolve(null),
+          fetch(`/api/saved?clerkId=${userId}`),
         ]);
 
         const bookingsData = await bookingsRes.json();
@@ -73,6 +77,9 @@ export default function DashboardPage() {
           const reviewsData = await reviewsRes.json();
           setReviewCount(reviewsData.reviews?.length ?? 0);
         }
+
+        const savedData = await savedRes.json();
+        setSavedCount(savedData.saved?.length ?? 0);
 
         setLoading(false);
       } catch (error) {
@@ -136,7 +143,7 @@ export default function DashboardPage() {
 
         <StatsCard
           title="Saved Places"
-          value={0}
+          value={savedCount}
           icon={<Heart size={18} />}
           color="amber"
           change="Favourites"
@@ -211,8 +218,8 @@ export default function DashboardPage() {
                     b.status === "confirmed"
                       ? "secondary"
                       : b.status === "cancelled"
-                      ? "danger"
-                      : "warning"
+                        ? "danger"
+                        : "warning"
                   }
                 >
                   {b.status}

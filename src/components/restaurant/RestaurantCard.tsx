@@ -7,6 +7,7 @@ import { formatPrice, truncate } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
 import StarRating from "@/components/ui/StarRating";
 import Button from "@/components/ui/Button";
+import SaveButton from "@/components/ui/SaveButton"; // 👈 add
 
 export default function RestaurantCard({ restaurant }: { restaurant: IRestaurant }) {
   return (
@@ -24,14 +25,14 @@ export default function RestaurantCard({ restaurant }: { restaurant: IRestaurant
             {restaurant.isOpen ? "Open" : "Closed"}
           </Badge>
         </div>
-        <div className="absolute top-3 right-3">
-          <Badge variant="gray">
-            {formatPrice(restaurant.priceRange)}
-          </Badge>
+        {/* Price + Save side by side */}
+        <div className="absolute top-3 right-3 flex items-center gap-2"> {/* 👈 changed */}
+          <Badge variant="gray">{formatPrice(restaurant.priceRange)}</Badge>
+          <SaveButton restaurantId={restaurant._id as string} /> {/* 👈 add */}
         </div>
       </div>
 
-      {/* Content */}
+      {/* Content — unchanged below */}
       <div className="p-4 flex flex-col flex-1 gap-3">
         <div>
           <Badge variant="primary" className="mb-2">{restaurant.cuisine}</Badge>
@@ -43,7 +44,6 @@ export default function RestaurantCard({ restaurant }: { restaurant: IRestaurant
           </p>
         </div>
 
-        {/* Meta */}
         <div className="flex items-center gap-3 text-sm text-stone-500 dark:text-stone-400">
           <div className="flex items-center gap-1">
             <StarRating rating={restaurant.rating} size={13} />
@@ -66,7 +66,6 @@ export default function RestaurantCard({ restaurant }: { restaurant: IRestaurant
           )}
         </div>
 
-        {/* Button */}
         <div className="mt-auto pt-2">
           <Link href={`/restaurants/${restaurant._id}`} className="block">
             <Button variant="outline" size="sm" className="w-full">
