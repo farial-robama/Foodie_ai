@@ -11,6 +11,7 @@ export default function ProfilePage() {
   const { user } = useUser();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
@@ -19,25 +20,23 @@ export default function ProfilePage() {
     if (user) {
       setName(user.fullName || "");
       setEmail(user.primaryEmailAddress?.emailAddress || "");
+      setAvatar(user.imageUrl || "");
     }
   }, [user]);
 
   const handleSave = async () => {
     if (!userId || !user) return;
     setSaving(true);
-
     try {
       await fetch("/api/users", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ clerkId: userId, name }),
       });
-
       await user.update({
         firstName: name.split(" ")[0],
         lastName: name.split(" ").slice(1).join(" "),
       });
-
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
@@ -49,16 +48,43 @@ export default function ProfilePage() {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user) return;
+    if (!file || !userId) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Image must be under 10MB");
+      return;
+    }
 
     setImageUploading(true);
     try {
-      await user.setProfileImage({ file });
-      await user.reload();
+      // Upload to imgbb
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+        { method: "POST", body: formData }
+      );
+      const data = await res.json();
+
+      if (!data.success) throw new Error("imgbb upload failed");
+
+      const imageUrl = data.data.url;
+
+      // Save URL to MongoDB
+      await fetch("/api/users", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clerkId: userId, avatar: imageUrl }),
+      });
+
+      setAvatar(imageUrl);
     } catch (err) {
-      console.error("Image upload failed:", err);
+      console.error("Upload failed:", err);
+      alert("Upload failed, please try again");
     } finally {
       setImageUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -79,11 +105,10 @@ export default function ProfilePage() {
           Profile Picture
         </h2>
         <div className="flex items-center gap-4">
-          {/* Clickable avatar */}
           <label className="relative w-20 h-20 rounded-2xl overflow-hidden bg-stone-200 dark:bg-stone-700 flex-shrink-0 cursor-pointer group">
-            {user?.imageUrl ? (
+            {avatar ? (
               <img
-                src={user.imageUrl}
+                src={avatar}
                 alt="avatar"
                 className="w-full h-full object-cover"
               />
@@ -93,14 +118,12 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Overlay */}
-
             <div
               className={cn(
                 "absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity",
                 imageUploading
                   ? "opacity-100"
-                  : "opacity-0 group-hover:opacity-100",
+                  : "opacity-0 group-hover:opacity-100"
               )}
             >
               {imageUploading ? (
@@ -159,12 +182,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          <Button
-            onClick={handleSave}
-            variant="primary"
-            size="md"
-            loading={saving}
-          >
+          <Button onClick={handleSave} variant="primary" size="md" loading={saving}>
             Save Changes
           </Button>
         </div>
