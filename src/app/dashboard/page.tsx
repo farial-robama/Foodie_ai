@@ -27,6 +27,7 @@ export default function DashboardPage() {
   const router = useRouter();
 
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [reviewCount, setReviewCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [roleChecked, setRoleChecked] = useState(false);
 
@@ -49,6 +50,7 @@ export default function DashboardPage() {
 
         const syncData = await syncRes.json();
         const role = syncData.user?.role;
+        const mongoId = syncData.user?._id;
 
         setRoleChecked(true);
 
@@ -58,11 +60,20 @@ export default function DashboardPage() {
           return;
         }
 
-        // Fetch user bookings
-        const res = await fetch(`/api/bookings?clerkId=${userId}`);
-        const data = await res.json();
+        // Fetch bookings and reviews in parallel
+        const [bookingsRes, reviewsRes] = await Promise.all([
+          fetch(`/api/bookings?clerkId=${userId}`),
+          mongoId ? fetch(`/api/reviews?userId=${mongoId}`) : Promise.resolve(null),
+        ]);
 
-        setBookings(data.bookings || []);
+        const bookingsData = await bookingsRes.json();
+        setBookings(bookingsData.bookings || []);
+
+        if (reviewsRes) {
+          const reviewsData = await reviewsRes.json();
+          setReviewCount(reviewsData.reviews?.length ?? 0);
+        }
+
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -116,7 +127,7 @@ export default function DashboardPage() {
 
         <StatsCard
           title="Reviews Given"
-          value={0}
+          value={reviewCount}
           icon={<Star size={18} />}
           color="purple"
           change="This month"
@@ -161,7 +172,6 @@ export default function DashboardPage() {
         ) : bookings.length === 0 ? (
           <div className="p-10 text-center">
             <p className="text-stone-400 text-sm mb-3">No bookings yet</p>
-
             <Link
               href="/explore"
               className="text-sm font-medium"
@@ -191,7 +201,6 @@ export default function DashboardPage() {
                   <p className="font-medium text-stone-900 dark:text-white text-sm truncate">
                     {b.restaurantId?.name || "Restaurant"}
                   </p>
-
                   <p className="text-xs text-stone-500 dark:text-stone-400">
                     {b.date} at {b.time} · {b.guests} guests
                   </p>

@@ -8,15 +8,21 @@ export async function GET(req: NextRequest) {
     await connectDB();
     const { searchParams } = new URL(req.url);
     const restaurantId = searchParams.get("restaurantId");
-    if (!restaurantId) {
-      return NextResponse.json({ error: "restaurantId required" }, { status: 400 });
-    }
-    const reviews = await Review.find({ restaurantId })
-      .populate("userId", "name avatar")
+    const userId       = searchParams.get("userId");
+
+    const query: Record<string, unknown> = {};
+    if (restaurantId) query.restaurantId = restaurantId;
+    if (userId)       query.userId       = userId;
+
+    const reviews = await Review.find(query)
+      .populate("userId",       "name avatar")
+      .populate("restaurantId", "name cuisine images")
       .sort({ createdAt: -1 })
       .lean();
+
     return NextResponse.json({ reviews });
-  } catch {
+  } catch (error) {
+    console.error("Reviews GET error:", error);
     return NextResponse.json({ error: "Failed to fetch reviews" }, { status: 500 });
   }
 }
@@ -33,16 +39,17 @@ export async function POST(req: NextRequest) {
 
     const review = await Review.create({ userId, restaurantId, rating, comment });
 
-    // Update restaurant rating average
+    // Update restaurant rating
     const allReviews = await Review.find({ restaurantId });
-    const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+    const avgRating  = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
     await Restaurant.findByIdAndUpdate(restaurantId, {
-      rating: Math.round(avgRating * 10) / 10,
+      rating:      Math.round(avgRating * 10) / 10,
       reviewCount: allReviews.length,
     });
 
     return NextResponse.json({ review }, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error("Reviews POST error:", error);
     return NextResponse.json({ error: "Failed to create review" }, { status: 500 });
   }
 }
