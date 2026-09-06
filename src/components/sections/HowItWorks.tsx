@@ -1,4 +1,3 @@
-"use client";
 import { Search, CalendarCheck, UtensilsCrossed } from "lucide-react";
 
 const steps = [

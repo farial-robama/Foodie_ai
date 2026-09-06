@@ -20,6 +20,8 @@ async function getFeaturedRestaurants(): Promise<IRestaurant[]> {
 
 export default async function FeaturedSection() {
   const restaurants = await getFeaturedRestaurants();
+ 
+  const track = restaurants.length > 0 ? [...restaurants, ...restaurants] : [];
 
   return (
     <section className="section-pad bg-[var(--color-warm)] dark:bg-stone-900">
@@ -42,11 +44,23 @@ export default async function FeaturedSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {restaurants.length > 0
-            ? restaurants.map((r) => <RestaurantCard key={r._id} restaurant={r} />)
-            : Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
-        </div>
+        {restaurants.length > 0 ? (
+          <div className="featured-marquee-mask -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <div className="featured-marquee-track flex w-max gap-5">
+              {track.map((r, i) => (
+                <div key={`${r._id}-${i}`} className="w-72 shrink-0 sm:w-80">
+                  <RestaurantCard restaurant={r} />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
 
         <div className="flex sm:hidden justify-center mt-6">
           <Link href="/explore">
@@ -59,6 +73,24 @@ export default async function FeaturedSection() {
           </Link>
         </div>
       </div>
+
+      <style>{`
+        .featured-marquee-track {
+          animation: featured-marquee-scroll 40s linear infinite;
+        }
+        .featured-marquee-mask:hover .featured-marquee-track {
+          animation-play-state: paused;
+        }
+        @keyframes featured-marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .featured-marquee-track {
+            animation: none;
+          }
+        }
+      `}</style>
     </section>
   );
 }

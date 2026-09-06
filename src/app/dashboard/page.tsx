@@ -37,7 +37,6 @@ export default function DashboardPage() {
 
     const init = async () => {
       try {
-        // Sync user to database
         const syncRes = await fetch("/api/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -61,7 +60,7 @@ export default function DashboardPage() {
           return;
         }
 
-        // Fetch bookings and reviews in parallel
+        // Fetch bookings and reviews
         const [bookingsRes, reviewsRes, savedRes] = await Promise.all([
           fetch(`/api/bookings?clerkId=${userId}`),
           mongoId

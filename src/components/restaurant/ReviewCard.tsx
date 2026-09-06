@@ -2,6 +2,7 @@
 import { IReview } from "@/types";
 import StarRating from "@/components/ui/StarRating";
 import { formatDate } from "@/lib/utils";
+import Image from "next/image";
 
 export default function ReviewCard({ review }: { review: IReview }) {
   const user = review.userId as { name?: string; avatar?: string } | string;
@@ -11,9 +12,9 @@ export default function ReviewCard({ review }: { review: IReview }) {
   return (
     <div className="bg-white dark:bg-stone-900 rounded-2xl p-5 border border-stone-200 dark:border-stone-800">
       <div className="flex items-start gap-3">
-        <div className="w-9 h-9 rounded-full bg-stone-200 dark:bg-stone-700 flex items-center justify-center text-sm font-semibold text-stone-600 dark:text-stone-300 flex-shrink-0 overflow-hidden">
+        <div className="w-9 h-9 rounded-full bg-stone-200 dark:bg-stone-700 flex items-center justify-center text-sm font-semibold text-stone-600 dark:text-stone-300 flex-shrink-0 overflow-hidden relative">
           {avatar
-            ? <img src={avatar} alt={name} className="w-full h-full object-cover" />
+            ? <Image src={avatar} alt={name} fill sizes="36px" className="object-cover" />
             : name?.[0]?.toUpperCase() || "U"
           }
         </div>

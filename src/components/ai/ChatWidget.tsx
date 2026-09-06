@@ -15,18 +15,19 @@ const suggestions = [
 ];
 
 export default function ChatWidget() {
-  const [isOpen,   setIsOpen]   = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      role:    "assistant",
-      content: "Hey there! 👋 I'm your FoodieAI assistant. Ask me anything about restaurants, cuisines, or food recommendations!",
+      role: "assistant",
+      content:
+        "Hey there! 👋 I'm your FoodieAI assistant. Ask me anything about restaurants, cuisines, or food recommendations!",
     },
   ]);
-  const [input,   setInput]   = useState("");
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [unread,  setUnread]  = useState(0);
-  const bottomRef             = useRef<HTMLDivElement>(null);
-  const inputRef              = useRef<HTMLInputElement>(null);
+  const [unread, setUnread] = useState(0);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -39,6 +40,12 @@ export default function ChatWidget() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    const handler = () => setIsOpen(true);
+    window.addEventListener("foodie:open-chat", handler);
+    return () => window.removeEventListener("foodie:open-chat", handler);
+  }, []);
+
   const sendMessage = async (text: string) => {
     if (!text.trim() || loading) return;
 
@@ -49,11 +56,11 @@ export default function ChatWidget() {
 
     try {
       const res = await fetch("/api/ai/chat", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({
+        body: JSON.stringify({
           messages: [...messages, userMsg].map((m) => ({
-            role:    m.role,
+            role: m.role,
             content: m.content,
           })),
         }),
@@ -61,7 +68,7 @@ export default function ChatWidget() {
 
       const data = await res.json();
       const assistantMsg: Message = {
-        role:    "assistant",
+        role: "assistant",
         content: data.message || "Sorry, I couldn't get a response.",
       };
       setMessages((prev) => [...prev, assistantMsg]);
@@ -69,7 +76,10 @@ export default function ChatWidget() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Something went wrong. Please try again." },
+        {
+          role: "assistant",
+          content: "Something went wrong. Please try again.",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -87,7 +97,8 @@ export default function ChatWidget() {
     <>
       {/* Chat window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-96 flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900"
+        <div
+          className="fixed bottom-20 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-96 flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900"
           style={{ maxHeight: "520px" }}
         >
           {/* Header */}
@@ -100,7 +111,9 @@ export default function ChatWidget() {
                 <Sparkles size={15} className="text-white" />
               </div>
               <div>
-                <p className="text-white font-semibold text-sm">FoodieAI Assistant</p>
+                <p className="text-white font-semibold text-sm">
+                  FoodieAI Assistant
+                </p>
                 <p className="text-white/70 text-xs">
                   {loading ? "Thinking..." : "Online · Ready to help"}
                 </p>
@@ -115,7 +128,10 @@ export default function ChatWidget() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ minHeight: "280px", maxHeight: "340px" }}>
+          <div
+            className="flex-1 overflow-y-auto p-4 space-y-3"
+            style={{ minHeight: "280px", maxHeight: "340px" }}
+          >
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -135,7 +151,11 @@ export default function ChatWidget() {
                       ? "text-white rounded-br-sm"
                       : "bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 rounded-bl-sm"
                   }`}
-                  style={msg.role === "user" ? { backgroundColor: "var(--color-primary)" } : {}}
+                  style={
+                    msg.role === "user"
+                      ? { backgroundColor: "var(--color-primary)" }
+                      : {}
+                  }
                 >
                   {msg.content}
                 </div>
@@ -144,8 +164,10 @@ export default function ChatWidget() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mr-2"
-                  style={{ backgroundColor: "var(--color-primary)" }}>
+                <div
+                  className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mr-2"
+                  style={{ backgroundColor: "var(--color-primary)" }}
+                >
                   <Sparkles size={11} className="text-white" />
                 </div>
                 <div className="bg-stone-100 dark:bg-stone-800 px-4 py-3 rounded-2xl rounded-bl-sm">

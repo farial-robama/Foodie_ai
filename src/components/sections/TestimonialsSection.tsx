@@ -1,4 +1,4 @@
-"use client";
+import Image from "next/image";
 import StarRating from "@/components/ui/StarRating";
 
 const testimonials = [
@@ -31,9 +31,12 @@ const testimonials = [
   },
 ];
 
+// Duplicated once so the marquee loop is seamless at -50% translate.
+const track = [...testimonials, ...testimonials];
+
 export default function TestimonialsSection() {
   return (
-    <section className="section-pad bg-white dark:bg-stone-950">
+    <section className="section-pad overflow-hidden bg-white dark:bg-stone-950">
       <div className="container-pad">
         <div className="text-center mb-12">
           <p className="text-sm font-medium mb-1" style={{ color: "var(--color-primary)" }}>
@@ -46,27 +49,35 @@ export default function TestimonialsSection() {
             Join thousands of food lovers who found their favourite restaurants with FoodieAI
           </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
+      <div className="testimonial-marquee-mask overflow-hidden">
+        <div className="testimonial-marquee-track flex w-max gap-6 px-4 sm:px-6 lg:px-8">
+          {track.map((t, i) => (
             <div
-              key={i}
-              className="flex flex-col gap-4 p-6 rounded-2xl border border-stone-200 dark:border-stone-800 bg-[var(--color-warm)] dark:bg-stone-900 hover:shadow-md transition-shadow duration-300"
+              key={`${t.name}-${i}`}
+              className="flex w-80 shrink-0 flex-col gap-4 rounded-2xl border border-stone-200 bg-[var(--color-warm)] p-6 dark:border-stone-800 dark:bg-stone-900 sm:w-96"
             >
               <StarRating rating={t.rating} size={15} />
-              <p className="text-stone-700 dark:text-stone-300 text-sm leading-relaxed flex-1">
+              <p className="flex-1 text-sm leading-relaxed text-stone-700 dark:text-stone-300">
                 "{t.review}"
               </p>
-              <div className="pt-3 border-t border-stone-200 dark:border-stone-800">
-                <p className="text-xs text-stone-400 mb-3">{t.restaurant}</p>
+              <div className="border-t border-stone-200 pt-3 dark:border-stone-800">
+                <p className="mb-3 text-xs text-stone-400">{t.restaurant}</p>
                 <div className="flex items-center gap-3">
-                  <img
-                    src={t.avatar}
-                    alt={t.name}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                    <Image
+                      src={t.avatar}
+                      alt={t.name}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  </div>
                   <div>
-                    <p className="text-sm font-semibold text-stone-900 dark:text-white">{t.name}</p>
+                    <p className="text-sm font-semibold text-stone-900 dark:text-white">
+                      {t.name}
+                    </p>
                     <p className="text-xs text-stone-500">{t.role}</p>
                   </div>
                 </div>
@@ -75,6 +86,24 @@ export default function TestimonialsSection() {
           ))}
         </div>
       </div>
+
+      <style>{`
+        .testimonial-marquee-track {
+          animation: testimonial-marquee-scroll 36s linear infinite;
+        }
+        .testimonial-marquee-mask:hover .testimonial-marquee-track {
+          animation-play-state: paused;
+        }
+        @keyframes testimonial-marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .testimonial-marquee-track {
+            animation: none;
+          }
+        }
+      `}</style>
     </section>
   );
 }
