@@ -18,11 +18,6 @@ const CITIES: CityEntry[] = [
 
 const TOTAL_SPOTS = CITIES.reduce((sum, c) => sum + c.restaurantCount, 0);
 
-/**
- * Bento-grid layout: one wide card per row edge, a typographic centerpiece,
- * and a stat + CTA tile filling out the grid. All gradients are built from
- * the theme's own primary/secondary/warm/dark tokens — no outside colors.
- */
 export default function PopularCitiesSection() {
   return (
     <section className="section-pad bg-warm dark:bg-dark">

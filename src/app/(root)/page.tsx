@@ -17,10 +17,10 @@ export default function HomePage() {
     <main>
       <HeroSection />
       <FeaturedSection />
-      <Popularcitiessection />
       <Chefspotlightsection />
       <HowItWorks />
       <CuisineMarquee />
+      <Popularcitiessection />
       <StatsSection />
       <TopRatedSection />
       <TestimonialsSection />
