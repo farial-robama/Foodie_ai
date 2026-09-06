@@ -32,7 +32,7 @@
 ## ✨ Features
 
 ### 🌐 Public Features
-- **Landing Page** — 10 sections: Hero, Categories, Featured, How It Works, Stats, Testimonials, Blog, Newsletter, CTA, Footer
+- **Landing Page** — 14 sections: Hero, Cuisine Marquee, Categories, Featured, How It Works, Popular Cities, Chef Spotlight, Stats, Testimonials, FAQ, Blog, Newsletter, CTA, Footer
 - **Explore Page** — Search, filter by cuisine/price/rating/location, sort, paginate
 - **Restaurant Detail** — Overview, menu, reviews, booking form, related restaurants
 - **Blog** — Food articles and guides
